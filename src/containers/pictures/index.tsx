@@ -7,6 +7,9 @@ import imagesStorage from "../../reducers/imagesStorage";
 import { getImageById, getImages, getImagesWithGroups } from "../../selectors";
 import Layout from "../layout";
 import ImagesContainer from "../imagesContainer/";
+import styles from "./styles.scss";
+import ImageDrawer from "../imageDrawer";
+import MultiImageDrawer from "../multiImageDrawer";
 // import { fetchImage } from "../../api";
 const Pictures = () => {
   const dispatch = useDispatch();
@@ -30,36 +33,14 @@ const Pictures = () => {
   let images = useSelector((state) => getImages(state));
   let groupImages = useSelector((state) => getImagesWithGroups(state));
 
-  // useEffect(() => {
-  //   images = useSelector((state) => getImages(state));
-  // }, []);
-  console.log("group images", groupImages);
-  const drawImages = (groupBy) => {
-    if (!groupBy) {
-      return images.map((image, indexa) => renderImage(image, indexa));
-    } else {
-      return groupImages.map((image, indexa) => (
-        <ImagesContainer
-          key={indexa + getRandomInt(8000, 10000)}
-          imagesObject={image}
-        ></ImagesContainer>
-      ));
-    }
-  };
   const renderImage = (image, index) => {
     return (
-      <div key={getRandomInt(1000, 5000)}>
-        {image}
+      <div class="image" key={getRandomInt(1000, 5000)}>
         <img src={image} />
       </div>
     );
   };
-
   const [groupBy, setGroupBy] = useState(false);
-
-  // useEffect(() => {
-  //   setPicAdress(useSelector((state) => getImageById(state, 0)));
-  // }, [quantityOfGets]);
   const handleUploading = (value: string) => {
     const currentValue = value.replace(" ", "");
     if (value.length === 0) {
@@ -78,38 +59,49 @@ const Pictures = () => {
     setTextInputState(value);
   };
   return (
-    <div>
-      <input
-        id="inputThing"
-        value={textInputState}
-        onChange={(event) => handleInputChange(event.target.value)}
-      ></input>
-      <button onClick={(event) => handleUploading(textInputState)}>
-        GetNewPic
-      </button>
-      {/* {imagesStorage.length ? (
-        images.map((image, index) => renderImage(image, index))
-      ) : (
-        <div>none</div>
-      )} */}
-      <button className="groupButton" onClick={() => setGroupBy(!groupBy)}>
-        {!groupBy ? "Группировать" : "Разгруппировать"}
-      </button>
-
-      <button className="unGroupButton">Разгруппировать</button>
-      <button className="clearButton" onClick={() => dispatch(cleanStorage())}>
-        Clear
-      </button>
-      <div className="testtesttest">
-        {" "}
-        Test{" "}
-        {/* {!groupBy ? (
-          images.map((image, indexa) => renderImage(image, indexa))
+    <div className={styles.main__container}>
+      <div className={styles.control__container}>
+        <input
+          id="inputThing"
+          value={textInputState}
+          onChange={(event) => handleInputChange(event.target.value)}
+        ></input>
+        <button
+          className={styles.btn__load}
+          onClick={(event) => handleUploading(textInputState)}
+        >
+          Загрузить
+        </button>
+        <button
+          className={!groupBy ? styles.btn__group : styles.btn__ungroup}
+          onClick={() => setGroupBy(!groupBy)}
+        >
+          {!groupBy ? "Группировать" : "Разгруппировать"}
+        </button>
+        <button
+          className={styles.btn__delete}
+          onClick={() => dispatch(cleanStorage())}
+        >
+          Clear
+        </button>
+      </div>
+      <div className={styles.images__main__container}>
+        {!groupBy ? (
+          <h1 className={styles.allTags}>All Tags</h1>
         ) : (
-          <div>notGroupBy</div>
-        )} */}
+          <h1 className={styles.allTags}>Groups</h1>
+        )}
         {!groupBy
-          ? images.map((image, indexa) => renderImage(image, indexa))
+          ? images.map((image, indexa) =>
+              !Array.isArray(image) ? (
+                <ImageDrawer key={image + indexa} image={image}></ImageDrawer>
+              ) : (
+                <MultiImageDrawer
+                  key={image + indexa}
+                  image={image}
+                ></MultiImageDrawer>
+              )
+            )
           : groupImages.map((image) => (
               <ImagesContainer
                 key={image.group}
