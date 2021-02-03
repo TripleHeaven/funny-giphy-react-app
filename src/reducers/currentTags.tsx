@@ -1,5 +1,6 @@
 import {
   ADD_A_TAG,
+  ADD_MULTY_TAGS,
   CLEAR_STORAGE,
   FETCH_IMAGE_SUCCES,
 } from "../actions/actionTypes";
@@ -11,10 +12,20 @@ const initialState = [];
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case ADD_A_TAG:
-      if (state.indexOf(payload) === -1) {
-        return R.append(payload, state);
+      for (let i = 0; i < state.length; i++) {
+        if (JSON.stringify(payload) == JSON.stringify(state[i])) {
+          return state;
+        }
       }
-      return state;
+      return R.append(payload, state);
+    case ADD_MULTY_TAGS:
+      for (let i = 0; i < state.length; i++) {
+        if (JSON.stringify(payload) == JSON.stringify(state[i])) {
+          return state;
+        }
+      }
+      return R.append(payload, state);
+
     case CLEAR_STORAGE:
       return initialState;
     default:

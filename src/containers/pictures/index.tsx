@@ -13,9 +13,18 @@ const Pictures = () => {
   // useEffect(() => {
   //   dispatch(fetchImage());
   // }, []);
-
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+  }
   const fetchNewImageByTag = (stringValue: string) => {
-    dispatch(fetchImage(stringValue));
+    const arrayToSend = [];
+    arrayToSend.push(stringValue);
+    dispatch(fetchImage(arrayToSend));
+  };
+  const fetchImageByMultipleTags = (tags: Array<string>) => {
+    dispatch(fetchImage(tags));
   };
 
   let images = useSelector((state) => getImages(state));
@@ -31,7 +40,7 @@ const Pictures = () => {
     } else {
       return groupImages.map((image, indexa) => (
         <ImagesContainer
-          key={image.group}
+          key={indexa + getRandomInt(8000, 10000)}
           imagesObject={image}
         ></ImagesContainer>
       ));
@@ -39,7 +48,7 @@ const Pictures = () => {
   };
   const renderImage = (image, index) => {
     return (
-      <div key={index}>
+      <div key={getRandomInt(1000, 5000)}>
         {image}
         <img src={image} />
       </div>
@@ -51,15 +60,16 @@ const Pictures = () => {
   // useEffect(() => {
   //   setPicAdress(useSelector((state) => getImageById(state, 0)));
   // }, [quantityOfGets]);
-  const renderGroups = () => {};
   const handleUploading = (value: string) => {
     const currentValue = value.replace(" ", "");
     if (value.length === 0) {
       alert("Вы ввели пустой запрос!");
     } else if (!currentValue.match(/([A-Za-z,]|[A-Za-z])+/)) {
       alert("Упссс , вы ввели что-то неправильно");
-    } else {
+    } else if (value.split(",").length === 1) {
       fetchNewImageByTag(currentValue);
+    } else {
+      fetchImageByMultipleTags(value.split(","));
     }
   };
   const [textInputState, setTextInputState] = useState("");
@@ -98,19 +108,17 @@ const Pictures = () => {
         ) : (
           <div>notGroupBy</div>
         )} */}
-        {drawImages(groupBy)}
+        {!groupBy
+          ? images.map((image, indexa) => renderImage(image, indexa))
+          : groupImages.map((image) => (
+              <ImagesContainer
+                key={image.group}
+                imagesObject={image}
+              ></ImagesContainer>
+            ))}
       </div>
     </div>
   );
 };
 
 export default connect()(Pictures);
-
-export const renderImage = (image, index) => {
-  return (
-    <div key={index}>
-      {image}
-      <img src={image} />
-    </div>
-  );
-};

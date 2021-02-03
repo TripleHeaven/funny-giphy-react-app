@@ -7,3 +7,7 @@ export const ADD_IMAGE_SUCCES = "ADD_IMAGE_SUCCES";
 export const ADD_A_TAG = "ADD_A_TAG";
 
 export const CLEAR_STORAGE = "CLEAR_STORAGE";
+
+export const MULTI_IMAGE_SUCCES = "MULTI_IMAGE_SUCCES";
+
+export const ADD_MULTY_TAGS = "ADD_MULTY_TAGS";

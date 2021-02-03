@@ -10,9 +10,4 @@ export const fetchImage = async (tagName: string) => {
   return body;
 };
 
-export const fetchImageById = async (id) => {
-  return new Promise((resolve, reject) => {
-    const pic = R.find(R.propEq("id", id), imagesStorage);
-    resolve(pic);
-  });
-};
+

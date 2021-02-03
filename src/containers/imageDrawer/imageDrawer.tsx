@@ -7,16 +7,14 @@ import imagesStorage from "../../reducers/imagesStorage";
 import { getImageById, getImages, getImagesWithGroups } from "../../selectors";
 import Layout from "../layout";
 import renderImage from "../pictures";
-import ImageDrawer from "../imageDrawer";
-import MultiImageDrawer from "../multiImageDrawer";
 // import { fetchImage } from "../../api";
-export default function ImagesContainer({ imagesObject }) {
+export default function ImageDrawer({ image }) {
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
   }
-  console.log("CURRENTIMAGESOBJECTIN", imagesObject);
+
   // const renderImage = (image, indexa) => {
   //   console.log(imagesObject);
   //   if (Array.isArray(image)) {
@@ -43,7 +41,11 @@ export default function ImagesContainer({ imagesObject }) {
     return <div>test</div>;
   };
   const renderSingleImage = (image) => {
-    return <img src={image[0]}></img>;
+    return (
+      <div>
+        <img src={image[0]}></img>
+      </div>
+    );
   };
   const renderMultiImage = (image) => {
     for (let i = 0; i < image.length; i++) {
@@ -52,24 +54,7 @@ export default function ImagesContainer({ imagesObject }) {
   };
   return (
     <div>
-      {imagesObject.group}
-      <br />
-      {/* {imagesObject.images.map((image, indexa) => renderImage(image, indexa))} */}
-      <div>
-        {imagesObject.images.map((image) =>
-          !Array.isArray(image) ? (
-            <ImageDrawer
-              key={imagesObject.group + image}
-              image={image}
-            ></ImageDrawer>
-          ) : (
-            <MultiImageDrawer
-              key={imagesObject + image[1]}
-              image={image}
-            ></MultiImageDrawer>
-          )
-        )}
-      </div>
+      <img src={image}></img>
     </div>
   );
 }
